@@ -15,14 +15,17 @@ notin:	.asciz	"not in  \n" # len = 9
 _start:
 #	jal	print_table
 
+# insert string and dump bloom table, two bits should be set
 	la	a0, text1
 	jal 	bloom_insert_string
 	jal	print_table
 
+# insert string and dump bloom table, four bits should be set
 	la	a0, text2
 	jal 	bloom_insert_string
 	jal	print_table
 
+## test 1 - string should be "maybe in"
 
 	la	a0, text1
 	jal	bloom_check_string
@@ -35,6 +38,7 @@ next1:
 	li	a2, 9
 	jal	print
 
+## test 2 - string should be "maybe in"
 
 	la	a0, text2
 	jal	bloom_check_string
@@ -47,6 +51,7 @@ next2:
 	li	a2, 9
 	jal	print
 
+## test 3 - string should be "not in"
 
 	la	a0, text3
 	jal	bloom_check_string
@@ -59,14 +64,9 @@ next3:
 	li	a2, 9
 	jal	print
 
-
-
-
 	j	_end
 
-
-
-	## Print out the bloom table
+## Print out the bloom table
 
 print_table:
 	FRAME	1
@@ -77,9 +77,9 @@ print_table:
 
 print_loop:
 	lb      a0, 0(s1)               # load current byte
-	mv      t0, a0                   # save current byte
+	mv      t0, a0                 	# save current byte
 
-	# --- print byte in binary ---
+	# print bloom table byte in binary
 	li      a1, 1
 	li      a2, 0
 	jal     to_bin
@@ -87,7 +87,6 @@ print_loop:
 	mv      a1, a0
 	jal     print
 
-	# --- print space ---
 	li      a2, 1
 	la      a1, space
 	jal     print
@@ -96,11 +95,10 @@ print_loop:
 	addi    t1, t1, 1               # increment bytes-in-line
 	addi    s0, s0, -1              # decrement remaining bytes
 
-	# --- print newline every 6 bytes ---
+	# print newline every 6 bytes
 	li      t2, 6
 	bne     t1, t2, skip_newline
 
-	# print newline
 	li      a2, 1
 	la      a1, nl
 	jal     print
@@ -126,14 +124,14 @@ skip_newline:
 	ret
 
 _end:
-        li	a0, 0	# exit code
-        li	a7, 93	# exit syscall
+        li	a0, 0		# exit code
+        li	a7, 93		# exit syscall
         ecall
 
 # a1 - ptr to string to print
 # a2 - # bytes to print
 print:
-	li	a0, 1	# stdout
-	li	a7, 64	# write syscall
+	li	a0, 1		# stdout
+	li	a7, 64		# write syscall
 	ecall
 	ret
