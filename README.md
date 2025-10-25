@@ -10,12 +10,12 @@ A [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) is a
 highly space-efficient data structure similar to a set. Unlike a set,
 a Bloom returns "maybe in set", and "definitely not in set" whereas
 a set returns "definitely in set" and "definitely not in set". The
-advantage of a Bloom filter is a large gain in space efficiency for
-large sets.
+advantage of a Bloom filter is a big gain in space efficiency for
+very large sets.
 
 The particular Bloom filter implemented here is designed to allow
 for storage of 100 items with a 1% false positive rate. It was
-designed with this [Bloom filter calculator](https://hur.st/bloomfilter/?n=100&p=0.1&m=&k=2)
+designed with this [Bloom filter calculator](https://hur.st/bloomfilter/?n=100&p=0.1&m=&k=2).
 It uses 66 bytes of storage to store the 100 items.
 
 This implementation uses two hash functions, both of which are simple
@@ -28,19 +28,26 @@ is a commonly used hashing function for this application.
 
 ## API
 
+The API follows the standard RISC-V ABI; it should be
+easy to make it C-callable as well as callable from assembly.
+
 rvbloom's public API consists of four routines:
 
-### bloom_insert_string - insert a string value into the Bloom filter.
+### bloom_insert_string
+Insert a string value into the Bloom filter.
 Input: a0 contains a pointer to a nul-terminated string.
 
-### bloom_insert_integer - insert an integer value into the Bloom filter.
+### bloom_insert_integer
+Insert an integer value into the Bloom filter.
 Input: a0 contains integer to insert.
 
-### bloom_check_string - determine if a string is possibly in the bloom filter.
+### bloom_check_string
+Determine if a string is possibly in the bloom filter.
 Input: a0 contains a pointer to a nul-terminated string.
 Output: a0 = 1 if string is possibly in filter, else 0.
 
-### bloom_check_integer - determine if an integer value is possibly in the bloom filter.
+### bloom_check_integer
+Determine if an integer value is possibly in the bloom filter.
 Input: a0 contains integer to check.
 Output: a0 = 1 if integer is possibly in filter, else 0.
 
@@ -102,3 +109,7 @@ User stop
 Retired 16481 instructions in 0.52s  31633 inst/s
 $ 
 ```
+
+## Customization
+- Bloom filter parameters (capacity, error likelyhood) may be changed in config.s
+- Hash functions in bloom.s may be updated to provide more entropy
