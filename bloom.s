@@ -43,7 +43,7 @@ sum_key_done:
 # routine: hash_h1
 #
 # Primary hash function
-# Uses modulo by table size for uniform distribution.
+# Computes modulo by table size. TODO: use M extension if available.
 #
 # input registers:
 # a0 = key sum to hash
@@ -67,8 +67,9 @@ hash_h1:
 ################################################################################
 # routine: hash_h2
 #
-# Secondary hash function - computes probe step size.
-# Uses modulo by (table size - 1) plus 1 to ensure coprime step size.
+# Secondary hash function. TODO: use M extension if available.
+# Uses modulo by (table size - 1) plus 1 to ensure coprime step size with
+# respect to hash_h1	
 #
 # input registers:
 # a0 = key sum to hash
@@ -82,7 +83,8 @@ hash_h2:
 
 	li	a1, BLOOM_TABLE_SIZE-1	# Divisor for divremu
 	jal	divremu		        # a0=quotient, a1=remainder
-	addi	a0, a1, 1		# Logical step is 1 to BLOOM_TABLE_SIZE-1 (this is in a1)
+	addi	a0, a1, 1		# a0 is 1 to BLOOM_TABLE_SIZE-1
+
 	POP	ra, 0
 	EFRAME	1
 	ret
@@ -109,6 +111,7 @@ bloom_insert_string:
 	POP	ra, 0
 	EFRAME	1
 	ret
+.size bloom_insert_string, .-bloom_insert_string
 
 ################################################################################
 # routine: bloom_insert_integer
@@ -138,6 +141,7 @@ bloom_insert_integer:
 	POP	s0, 1
 	EFRAME	2
 	ret
+.size bloom_insert_integer, .-bloom_insert_integer
 
 ################################################################################
 # routine: bloom_check_integer
@@ -173,7 +177,7 @@ bloom_check_integer:
 	POP	s1, 2
 	EFRAME 	3
 	ret
-
+.size bloom_check_integer, .-bloom_check_integer
 
 ################################################################################
 # routine: bloom_check_string
@@ -195,6 +199,7 @@ bloom_check_string:
 	POP	ra, 0
 	EFRAME	1
 	ret
+.size bloom_check_string, .-bloom_check_string
 
 ################################################################################
 # routine: bloom_set_bit
@@ -223,6 +228,7 @@ bloom_set_bit:
 .endif
 	sb	a3, 0(a2)
 	ret
+.size bloom_set_bit, .-bloom_set_bit
 	
 ################################################################################
 # routine: bloom_get_bit
@@ -251,3 +257,4 @@ bloom_get_bit:
 .endif
 	snez	a0, a3
 	ret
+.size bloom_get_bit, .-bloom_get_bit
