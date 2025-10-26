@@ -112,4 +112,4 @@ $
 
 ## Customization
 - Bloom filter parameters (capacity, error likelyhood) may be changed in config.s
-- Hash functions in bloom.s may be updated to provide more entropy
+- Hash functions in bloom.s may be updated to provide more entropy.
