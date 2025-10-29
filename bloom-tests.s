@@ -1,6 +1,6 @@
 .include	"config.s"
 
-.data
+.rodata
 space:	.asciz	" "
 nl:	.asciz 	"\n"
 line:	.asciz	"--------" # len = 8
