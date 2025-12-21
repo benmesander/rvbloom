@@ -1,12 +1,12 @@
 # RV64GC
-#TARGET	?=riscv64
-#ARCH	?=rv64gc
-#ABI	?=lp64
+TARGET	?=riscv64
+ARCH	?=rv64gc
+ABI	?=lp64
 
 #RV32GC
-TARGET	?=riscv32
-ARCH	?=rv32gc
-ABI	?=ilp32d
+#TARGET	?=riscv32
+#ARCH	?=rv32gc
+#ABI	?=ilp32d
 
 #CH32V003 - RV32E 
 #TARGET	?=riscv32
@@ -42,4 +42,4 @@ $(LIB): $(OBJS)
 	$(AR) $(ARFLAGS) $(LIB) $(OBJS)
 
 clean:
-	rm -f $(OBJS) $(EXES) $(LIB)
+	rm -f *.o $(OBJS) $(EXES) $(LIB)
